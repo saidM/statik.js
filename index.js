@@ -16,7 +16,7 @@ const upload = (files) => {
   // Upload all the valid files to the server
   utils.upload(subdomain, files)
   .then(() => {
-    const baseUrl = `http://45.77.62.63:3000/${subdomain}`
+    const baseUrl = `http://www.statik.run/${subdomain}`
 
     console.log(`${files.length} files uploaded to the server:`)
     files.map(file => console.log(`${baseUrl}/${file.filename}`))
@@ -28,9 +28,12 @@ const upload = (files) => {
  * Perform a search in the current directory for all the files (recursive)
  * Only works in UNIX-based systems for now (support for Windows scheduled for later)
  */
-exec('find .', (error, stdout, stderr) => {
+exec('find .', {maxBuffer: 1024*500}, (error, stdout, stderr) => {
   // If the UNIX command failed, we are most likely on a Windows environment (not supported yet)
-  if (error) process.exit(1)
+  if (error) {
+    console.log(error);
+    process.exit(1)
+  }
  
   // Create an array out of the result of the 'find' function (it returns a string by default)
   const allFiles = stdout.split('\n')
