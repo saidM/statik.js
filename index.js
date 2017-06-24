@@ -21,7 +21,7 @@ const upload = (files) => {
     console.log(`${files.length} files uploaded to the server:`)
     files.map(file => console.log(`${baseUrl}/${file.filename}`))
   })
-  .catch(err => console.error('Connection to remote server failed! Please try again.', err))
+  .catch(err => console.error('Connection to remote server failed! Please try again.'))
 }
 
 /**
@@ -38,12 +38,9 @@ exec('find .', {maxBuffer: 1024*500}, (error, stdout, stderr) => {
   // Create an array out of the result of the 'find' function (it returns a string by default)
   const allFiles = stdout.split('\n')
 
-  // Grab only the .html, .js and .css files
-  let validFiles = allFiles.filter(file => ['css', 'html', 'js'].includes(file.split('.').pop()))
+  // Grab only the .html, .js, .css and images files
+  let validFiles = allFiles.filter(file => ['css', 'html', 'js', 'png', 'gif', 'jpg', 'jpeg'].includes(file.split('.').pop()))
   
-  // Ignore files from /node_modules directory
-  validFiles = validFiles.filter(file => file.substring(2).split('/')[0] != 'node_modules')
-
   // Read the content for each valid files and store it in an array
   utils.readFiles(validFiles, (err, files) => upload(files))
 })
