@@ -1,7 +1,7 @@
 {
-  "name": "statik",
+  "name": "statik.js",
   "version": "0.1.0",
-  "description": "",
+  "description": "Static files deployment with a single command!",
   "main": "index.js",
   "preferGlobal": true,
   "scripts": {
