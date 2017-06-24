@@ -13,9 +13,9 @@ describe('Upload()', () => {
     let files = []
     for (let i = 0; i < 3; i++) files.push({ filename: `file-${i}.html`, content: `Content of file #${i}` }) 
     
-    const request1 = nock('http://www.statik.run').put(`/123/files/${files[0].filename}`, { content: files[0].content }).reply(200)
-    const request2 = nock('http://www.statik.run').put(`/123/files/${files[1].filename}`, { content: files[1].content }).reply(200)
-    const request3 = nock('http://www.statik.run').put(`/123/files/${files[2].filename}`, { content: files[2].content }).reply(200)
+    const request1 = nock('http://123.statik.run').put(`/${files[0].filename}`, { content: files[0].content }).reply(200)
+    const request2 = nock('http://123.statik.run').put(`/${files[1].filename}`, { content: files[1].content }).reply(200)
+    const request3 = nock('http://123.statik.run').put(`/${files[2].filename}`, { content: files[2].content }).reply(200)
     
     const promise = utils.upload(123, files)
     return expect(promise).to.eventually.be.fulfilled
@@ -25,9 +25,9 @@ describe('Upload()', () => {
     let files = []
     for (let i = 0; i < 3; i++) files.push({ filename: `file-${i}.html`, content: `Content of file #${i}` }) 
 
-    const request1 = nock('http://www.statik.run').put(`/123/files/${files[0].filename}`, { content: files[0].content }).reply(200)
-    const request2 = nock('http://www.statik.run').put(`/123/files/${files[1].filename}`, { content: files[1].content }).reply(200)
-    const request3 = nock('http://www.statik.run').put(`/123/files/${files[2].filename}`, { content: files[2].content }).reply(200)
+    const request1 = nock('http://123.statik.run').put(`/${files[0].filename}`, { content: files[0].content }).reply(200)
+    const request2 = nock('http://123.statik.run').put(`/${files[1].filename}`, { content: files[1].content }).reply(200)
+    const request3 = nock('http://123.statik.run').put(`/${files[2].filename}`, { content: files[2].content }).reply(200)
 
     utils.upload(123, files).then(() => {
       request1.done()

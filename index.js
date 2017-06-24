@@ -16,12 +16,12 @@ const upload = (files) => {
   // Upload all the valid files to the server
   utils.upload(subdomain, files)
   .then(() => {
-    const baseUrl = `http://www.statik.run/${subdomain}`
+    const baseUrl = `http://${subdomain}.statik.run`
 
     console.log(`${files.length} files uploaded to the server:`)
     files.map(file => console.log(`${baseUrl}/${file.filename}`))
   })
-  .catch(err => console.error('Connection to remote server failed! Please try again.'))
+  .catch(err => console.error('Connection to remote server failed! Please try again.', err))
 }
 
 /**
