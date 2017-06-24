@@ -21,7 +21,10 @@ const upload = (files) => {
     console.log(`${files.length} files uploaded to the server:`)
     files.map(file => console.log(`${baseUrl}/${file.filename}`))
   })
-  .catch(err => console.error('Connection to remote server failed! Please try again.'))
+  .catch(err => {
+    console.error('Connection to remote server failed! Please try again.')
+    process.exit(1)
+  })
 }
 
 /**

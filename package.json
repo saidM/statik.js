@@ -1,8 +1,9 @@
 {
-  "name": "push.online",
+  "name": "statik",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
+  "preferGlobal": true,
   "scripts": {
     "test": "mocha test",
     "coverage": "istanbul cover _mocha",
@@ -10,6 +11,9 @@
   },
   "author": "Saïd Mimouni <sayid.mimouni@gmail.com>",
   "license": "ISC",
+  "bin": {
+    "statik": "./bin/statik.js"
+  },
   "dependencies": {
     "axios": "^0.16.2"
   },
