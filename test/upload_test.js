@@ -4,6 +4,7 @@ const chai = require('chai'),
       expect = chai.expect,
       chaiAsPromised = require('chai-as-promised'),
       nock = require('nock'),
+      fs = require('fs'),
       utils = require('../utils')
 
 chai.use(chaiAsPromised)
