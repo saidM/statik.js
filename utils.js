@@ -29,28 +29,6 @@ const readFiles = (filenames, cb) => {
   })
 }
 
-/**
- * Creates a hidden '.statik.run' file in the current directory
- * * Generate within that file a subdomain and a secret key
- * 
- * @param {Function} cb - Callback
- * @return {Object} - { subdomain, secretKey }
- */
-const createHiddenFile = cb => {
-  // Change the naming of the file based on the NODE_ENV
-  const filename = process.env.NODE_ENV == 'test' ? '.statik.run.test' : '.statik.run'
-
-  // Generate a secret key to store in the file alongside the subdomain
-  const subdomain = Date.now()
-  const timestamp = Date.now().toString()
-  const secretKey = new Buffer(timestamp).toString('base64')
-  
-  fs.writeFile(filename, `${subdomain}\n${secretKey}`, err => {
-    if (err) return cb(err, null)
-    cb(null, { subdomain, secretKey })
-  })
-}
-
 const upload = (subdomain, files) => {
   // For each file, make a request to the API
   const requests = files.map(file => axios.put(`http://${subdomain}.statik.run/${file.filename}`, { content: file.content }))
@@ -59,4 +37,4 @@ const upload = (subdomain, files) => {
   return Promise.all(requests)
 }
 
-module.exports = {readFiles, createHiddenFile, upload}
+module.exports = {readFiles, upload}

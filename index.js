@@ -1,6 +1,9 @@
 'use strict'
 
-const {exec} = require('child_process')
+const {exec} = require('child_process'),
+      crypto = require('crypto')
+
+const configFile = require('./config_file')
 const utils = require('./utils')
 
 /**
@@ -42,12 +45,13 @@ exec('find .', {maxBuffer: 1024*500}, (error, stdout, stderr) => {
   // Grab only the .html, .js, .css and images files
   let validFiles = allFiles.filter(file => ['css', 'html', 'js', 'png', 'gif', 'jpg', 'jpeg'].includes(file.split('.').pop()))
 
-  // Create the .statik.run file
-  utils.createHiddenFile((err, data) => {
+  // Generate the subdomain and the secret key (to be stored in the config file)
+  const subdomain = Date.now()
+  const secretKey = crypto.randomBytes(64).toString('hex')
+  
+  // Create the config file to store the subdomain and the secret key
+  configFile.create(subdomain, secretKey, (err, data) => {
     if (err) return console.error(err)
-
-    // Get the subdomain from the hidden file
-    const {subdomain} = data
 
     // Read the content for each valid files and store it in an array. Then post each file to the server
     utils.readFiles(validFiles, (err, files) => upload(subdomain, files))

@@ -15,7 +15,8 @@
     "statik": "./bin/statik.js"
   },
   "dependencies": {
-    "axios": "^0.16.2"
+    "axios": "^0.16.2",
+    "crypto": "0.0.3"
   },
   "devDependencies": {
     "chai": "^4.0.2",

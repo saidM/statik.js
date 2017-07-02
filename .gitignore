@@ -56,3 +56,7 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# Ignore statik.js config files
+.statik.run
+.statik.run.test
