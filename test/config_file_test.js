@@ -4,7 +4,8 @@ process.env.NODE_ENV = 'test'
 
 const chai = require('chai'),
       expect = chai.expect,
-      chaiAsPromised = require('chai-as-promised')
+      chaiAsPromised = require('chai-as-promised'),
+      sinon = require('sinon')
 
 const fs = require('fs'),
       configFile = require('../config_file')
@@ -57,6 +58,32 @@ describe('Config file', () => {
         const {subdomain, secretKey} = data
         expect(subdomain).to.equal('hello')
         expect(secretKey).to.equal('123')
+      })
+    })
+  })
+
+  describe('credentials()', () => {
+    context('when there is no config file', () => {
+      it('creates the file and returns the credentials', () => {
+        return configFile.credentials().then(data => {
+          const {subdomain, secretKey} = data
+          
+          expect(subdomain).not.to.be.undefined
+          expect(secretKey).not.to.be.undefined
+        })
+      })
+    })
+    
+    context('when there is a config file', () => {
+      it('returns the credentials from the file', () => {
+        fs.writeFileSync('.statik.run.test', 'hello-world\n123')
+
+        return configFile.credentials().then(data => {
+          const {subdomain, secretKey} = data
+          
+          expect(subdomain).to.equal('hello-world')
+          expect(secretKey).to.equal('123')
+        })
       })
     })
   })

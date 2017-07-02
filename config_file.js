@@ -14,7 +14,6 @@ const filename = process.env.NODE_ENV == 'test' ? '.statik.run.test' : '.statik.
  */
 const exists = () => fs.existsSync(filename)
 
-
 /**
  * Reads the config file
  *
@@ -50,4 +49,15 @@ const create = (subdomain = Date.now(), secretKey = secret) => {
   })
 }
 
-module.exports = {exists, read, create}
+/**
+ * Returns the credentials from the config file (subdomain & private key)
+ * Does not do anything by itself, it just calls the appropriate method to get the data
+ *
+ * @return {Promise} - resolves with: {subdomain, secretKey}
+ */
+const credentials = () => {
+  if (exists()) return read()
+  return create()
+}
+
+module.exports = {exists, read, create, credentials}
