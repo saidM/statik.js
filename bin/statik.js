@@ -2,9 +2,12 @@
 'use strict'
 
 const {exec} = require('child_process')
-
 exec('node /usr/local/lib/node_modules/statik/index.js', (error, stdout, stderr) => {
-  if (error) console.error(error)
-  if (stdout) console.log(stdout)
-  if (stderr) console.error(stderr)
+  if (stdout) {
+    console.log(stdout)
+    process.exit(0)
+  } else if (error || stderr) {
+    console.error('An error occured!')
+    process.exit(1)
+  }
 })
