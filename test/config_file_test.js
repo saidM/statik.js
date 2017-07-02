@@ -4,11 +4,10 @@ process.env.NODE_ENV = 'test'
 
 const chai = require('chai'),
       expect = chai.expect,
-      chaiAsPromised = require('chai-as-promised'),
-      sinon = require('sinon')
+      chaiAsPromised = require('chai-as-promised')
 
 const fs = require('fs'),
-      configFile = require('../config_file')
+      configFile = require('../lib/config_file')
 
 chai.use(chaiAsPromised)
 
