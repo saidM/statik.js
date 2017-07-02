@@ -1,13 +1,14 @@
 'use strict'
 
-const fs = require('fs')
+const fs = require('fs'),
+      crypto = require('crypto')
 
 // The config file name is not the same based on the NODE_ENV variable
-const filename = process.env.NODE_ENV == 'test' ? '.statik.run.test' : '.statik.run'
-
+const filename = process.env.NODE_ENV == 'test' ? '.statik.run.test' : '.statik.run',
+      secret = crypto.randomBytes(64).toString('hex')
 
 /**
- * Check for the presence of the config file in the working directory
+ * Checks for the presence of the config file in the working directory
  *
  * @return {Boolean} - true if the file exists
  */
@@ -15,16 +16,18 @@ const exists = () => fs.existsSync(filename)
 
 
 /**
- * Read the config file
+ * Reads the config file
  *
- * @return {Function} cb - {subdomain, secretKey}
+ * @return {Promise} - resolves with: {subdomain, secretKey}
  */
-const read = (cb) => {
-  fs.readFile(filename, 'utf8', (err, data) => {
-    if (err) return cb(err, null)
+const read = () => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filename, 'utf8', (err, data) => {
+      if (err) return reject('COULD_NOT_READ_CONFIG_FILE')
 
-    const [subdomain, secretKey] = data.toString().split('\n')
-    cb(null, {subdomain, secretKey})
+      const [subdomain, secretKey] = data.toString().split('\n')
+      resolve({subdomain, secretKey})
+    })
   })
 }
 
@@ -33,15 +36,17 @@ const read = (cb) => {
  *
  * @param {String} subdomain
  * @param {String} secretKey
- * @return {Function} cb - {subdomain, secretKey}
+ * @return {Promise} - resolves with: {subdomain, secretKey}
  */
-const create = (subdomain, secretKey, cb) => {
-  // Write the subdomain first, then add the secret key after a line break
-  const content = `${subdomain}\n${secretKey}`
+const create = (subdomain = Date.now(), secretKey = secret) => {
+  return new Promise((resolve, reject) => {
+    // Write the subdomain first, then add the secret key after a line break
+    const content = `${subdomain}\n${secretKey}`
 
-  fs.writeFile(filename, content, 'utf8', (err, data) => {
-    if (err) return cb(err, null)
-    cb(null, {subdomain, secretKey})
+    fs.writeFile(filename, content, 'utf8', (err, data) => {
+      if (err) return reject('COULD_NOT_WRITE_CONFIG_FILE')
+      resolve({subdomain, secretKey})
+    })
   })
 }
 

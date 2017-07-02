@@ -2,10 +2,14 @@
 
 process.env.NODE_ENV = 'test'
 
-const expect = require('chai').expect,
+const chai = require('chai'),
+      expect = chai.expect,
+      chaiAsPromised = require('chai-as-promised')
+
+const fs = require('fs'),
       configFile = require('../config_file')
 
-const fs = require('fs')
+chai.use(chaiAsPromised)
 
 describe('Config file', () => {
   beforeEach(() => {
@@ -29,39 +33,30 @@ describe('Config file', () => {
 
   describe('read()', () => {
     context('when the file does not exist', () => {
-      it('returns an error in the callback', done => {
-        configFile.read((err, subdomain) => {
-          expect(err).not.to.be.null
-          expect(subdomain).to.be.null
-          done()
-        })
+      it('rejects the promise', () => {
+        return expect(configFile.read()).to.be.rejectedWith('COULD_NOT_READ_CONFIG_FILE')
       })
     })
     
     context('when the file does exist', () => {
-      it('it returns the subdomain and the secret key in the callback', done => {
+      it('it returns the subdomain and the secret key in the callback', () => {
         fs.writeFileSync('.statik.run.test', 'hello-world\n123')
-
-        configFile.read((err, data) => {
-          expect(err).to.be.null
-  
-          expect(data.subdomain).to.equal('hello-world')
-          expect(data.secretKey).to.equal('123')
-          done()
+        
+        return configFile.read().then(data => {
+          const {subdomain, secretKey} = data
+          expect(subdomain).to.equal('hello-world')
+          expect(secretKey).to.equal('123')
         })
       })
     })
   })
 
   describe('create(subdomain, secretKey)', () => {
-    it('creates a file and stores the subdomain and the secret key inside it', done => {
-      configFile.create('hello', '123', (err, data) => {
+    it('creates a file and stores the subdomain and the secret key inside it', () => {
+      return configFile.create('hello', '123').then(data => {
         const {subdomain, secretKey} = data
-
-        expect(err).to.be.null
         expect(subdomain).to.equal('hello')
         expect(secretKey).to.equal('123')
-        done()
       })
     })
   })
