@@ -31,16 +31,17 @@ const readFiles = (filenames, cb) => {
 
 /**
  * Creates a hidden '.statik.run' file in the current directory
+ * * Generate within that file a subdomain and a secret key
  * 
- * @param {String} subdomain
  * @param {Function} cb - Callback
  * @return {Object} - { subdomain, secretKey }
  */
-const createHiddenFile = (subdomain, cb) => {
+const createHiddenFile = cb => {
   // Change the naming of the file based on the NODE_ENV
   const filename = process.env.NODE_ENV == 'test' ? '.statik.run.test' : '.statik.run'
 
   // Generate a secret key to store in the file alongside the subdomain
+  const subdomain = Date.now()
   const timestamp = Date.now().toString()
   const secretKey = new Buffer(timestamp).toString('base64')
   

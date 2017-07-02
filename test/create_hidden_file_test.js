@@ -16,7 +16,7 @@ describe('createHiddenFile()', () => {
   })
 
   it('creates a hidden file', done => {
-    utils.createHiddenFile('123', (err, data) => {
+    utils.createHiddenFile((err, data) => {
       const exists = fs.existsSync('.statik.run.test')
       expect(exists).to.equal(true)
       done()
@@ -24,11 +24,11 @@ describe('createHiddenFile()', () => {
   })
 
   it('stores the subdomain and the secret key in the hidden file', (done) => {
-    utils.createHiddenFile('hello-world', (err, data) => {
+    utils.createHiddenFile((err, data) => {
       fs.readFile('.statik.run.test', (err2, data2) => {
         const [subdomain, secretKey] = data2.toString().split('\n')
 
-        expect(subdomain).to.equal('hello-world')
+        expect(subdomain).not.to.be.undefined
         expect(secretKey).not.to.be.undefined
         done()
       })
