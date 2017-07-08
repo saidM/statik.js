@@ -67,11 +67,21 @@ describe('Config file', () => {
 
   describe('create(subdomain, secretKey)', () => {
     it('creates a file and stores the subdomain and the secret key inside it', () => {
+      nock('http://www.statik.run').post('/sites/hello/123').reply(200)
+
       return configFile.create('hello', '123').then(data => {
         const {subdomain, secretKey} = data
         expect(subdomain).to.equal('hello')
         expect(secretKey).to.equal('123')
       })
+    })
+
+    it('makes a POST request to the backend', () => {
+      const scope = nock('http://www.statik.run').post('/sites/hello/123').reply(200)
+
+      return configFile.create('hello', '123').then(data => {
+        expect(scope.isDone()).to.be.true
+      }).catch(err => console.log(err))
     })
   })
 })
