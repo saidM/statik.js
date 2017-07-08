@@ -1,7 +1,7 @@
 'use strict'
 
-const fs = require('fs')
-const axios = require('axios')
+const fs = require('fs'),
+      axios = require('axios')
 
 /**
  * Removes the first dot(s) and first slash from the filename string

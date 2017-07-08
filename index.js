@@ -3,8 +3,8 @@
 const {exec} = require('child_process'),
       crypto = require('crypto')
 
-const configFile = require('./config_file')
-const utils = require('./utils')
+const configFile = require('./lib/config_file'),
+      utils = require('./utils')
 
 /**
  * Uploads all the selected files to the remote server
@@ -23,7 +23,7 @@ const upload = (subdomain, files) => {
     files.map(file => console.log(`${baseUrl}/${file.filename}`))
   })
   .catch(err => {
-    console.error('Connection to remote server failed! Please try again.')
+    console.error('Connection to remote server failed! Please try again.', err)
     process.exit(1)
   })
 }
@@ -51,5 +51,5 @@ exec('find .', {maxBuffer: 1024*500}, (error, stdout, stderr) => {
 
     // Read the content for each valid files and store it in an array. Then post each file to the server
     utils.readFiles(validFiles, (err, files) => upload(subdomain, files))
-  })
+  }).catch(err => console.log('An error occured trying to upload the files to the server:', err))
 })

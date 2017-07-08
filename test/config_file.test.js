@@ -4,7 +4,8 @@ process.env.NODE_ENV = 'test'
 
 const chai = require('chai'),
       expect = chai.expect,
-      chaiAsPromised = require('chai-as-promised')
+      chaiAsPromised = require('chai-as-promised'),
+      nock = require('nock')
 
 const fs = require('fs'),
       configFile = require('../lib/config_file')
@@ -39,11 +40,24 @@ describe('Config file', () => {
     })
     
     context('when the file does exist', () => {
-      it('it returns the subdomain and the secret key in the callback', () => {
+      it('it rejects the promise if the credentials are invalid', () => {
         fs.writeFileSync('.statik.run.test', 'hello-world\n123')
+        const scope = nock('http://www.statik.run').get('/credentials/hello-world/123').reply(401)
+        
+        return configFile.read().catch(err => {
+          expect(scope.isDone()).to.be.true
+          expect(err).to.equal('INVALID_CONFIG_FILE')
+        })
+      })
+
+      it('it resolves the promise if the credentials are valid', () => {
+        fs.writeFileSync('.statik.run.test', 'hello-world\n123')
+        const scope = nock('http://www.statik.run').get('/credentials/hello-world/123').reply(200)
         
         return configFile.read().then(data => {
           const {subdomain, secretKey} = data
+
+          expect(scope.isDone()).to.be.true
           expect(subdomain).to.equal('hello-world')
           expect(secretKey).to.equal('123')
         })
@@ -57,32 +71,6 @@ describe('Config file', () => {
         const {subdomain, secretKey} = data
         expect(subdomain).to.equal('hello')
         expect(secretKey).to.equal('123')
-      })
-    })
-  })
-
-  describe('credentials()', () => {
-    context('when there is no config file', () => {
-      it('creates the file and returns the credentials', () => {
-        return configFile.credentials().then(data => {
-          const {subdomain, secretKey} = data
-          
-          expect(subdomain).not.to.be.undefined
-          expect(secretKey).not.to.be.undefined
-        })
-      })
-    })
-    
-    context('when there is a config file', () => {
-      it('returns the credentials from the file', () => {
-        fs.writeFileSync('.statik.run.test', 'hello-world\n123')
-
-        return configFile.credentials().then(data => {
-          const {subdomain, secretKey} = data
-          
-          expect(subdomain).to.equal('hello-world')
-          expect(secretKey).to.equal('123')
-        })
       })
     })
   })
