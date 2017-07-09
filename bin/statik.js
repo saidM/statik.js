@@ -7,7 +7,7 @@ exec('node /usr/local/lib/node_modules/statik/index.js', (error, stdout, stderr)
     console.log(stdout)
     process.exit(0)
   } else if (error || stderr) {
-    console.error('An error occured!')
+    console.error('An error occured!', error || stderr)
     process.exit(1)
   }
 })

@@ -29,9 +29,15 @@ const readFiles = (filenames, cb) => {
   })
 }
 
-const upload = (subdomain, files) => {
+const upload = (subdomain, token, files) => {
   // For each file, make a request to the API
-  const requests = files.map(file => axios.put(`http://${subdomain}.statik.run/${file.filename}`, { content: file.content }))
+  const requests = files.map(file => axios.request({
+    url: '/' + file.filename,
+    method: 'put',
+    baseURL: 'http://' + subdomain + '.statik.run',
+    headers: {'authentication': token},
+    data: {content: file.content}
+  }))
 
   // Make all the requests in parallel
   return Promise.all(requests)

@@ -40,39 +40,26 @@ describe('Config file', () => {
     })
     
     context('when the file does exist', () => {
-      it('it rejects the promise if the credentials are invalid', () => {
+      it('it resolves the promise with the subdomain and the private key', () => {
         fs.writeFileSync('.statik.run.test', 'hello-world\n123')
-        const scope = nock('http://www.statik.run').get('/credentials/hello-world/123').reply(401)
-        
-        return configFile.read().catch(err => {
-          expect(scope.isDone()).to.be.true
-          expect(err).to.equal('INVALID_CONFIG_FILE')
-        })
-      })
-
-      it('it resolves the promise if the credentials are valid', () => {
-        fs.writeFileSync('.statik.run.test', 'hello-world\n123')
-        const scope = nock('http://www.statik.run').get('/credentials/hello-world/123').reply(200)
         
         return configFile.read().then(data => {
-          const {subdomain, secretKey} = data
-
-          expect(scope.isDone()).to.be.true
+          const {subdomain, token} = data
           expect(subdomain).to.equal('hello-world')
-          expect(secretKey).to.equal('123')
+          expect(token).to.equal('123')
         })
       })
     })
   })
 
-  describe('create(subdomain, secretKey)', () => {
+  describe('create(subdomain, token)', () => {
     it('creates a file and stores the subdomain and the secret key inside it', () => {
       nock('http://www.statik.run').post('/sites/hello/123').reply(200)
 
       return configFile.create('hello', '123').then(data => {
-        const {subdomain, secretKey} = data
+        const {subdomain, token} = data
         expect(subdomain).to.equal('hello')
-        expect(secretKey).to.equal('123')
+        expect(token).to.equal('123')
       })
     })
 
