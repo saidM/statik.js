@@ -30,4 +30,4 @@ Your project will then be available at an address similar to this one: http://xx
 
 ## Licence
 
-ISC
+MIT

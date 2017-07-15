@@ -9,8 +9,13 @@
     "coverage": "istanbul cover _mocha",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
+  "keywords": ["static", "static files", "deploy", "deployment", "html", "css", "images", "cloud", "cdn"],
   "author": "Saïd Mimouni <sayid.mimouni@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saidm/statik.js"
+  },
   "bin": {
     "statik": "./bin/statik.js"
   },
