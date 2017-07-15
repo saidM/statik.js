@@ -23,7 +23,7 @@ const upload = (subdomain, token, files) => {
     files.map(file => console.log(`${baseUrl}/${file.filename}`))
   })
   .catch(err => {
-    console.error('Connection to remote server failed! Please try again.', err)
+    console.error('Connection to remote server failed. Please try again later.')
     process.exit(1)
   })
 }
@@ -45,6 +45,7 @@ exec('find .', {maxBuffer: 1024*500}, (error, stdout, stderr) => {
   // Grab only the .html, .js, .css and images files
   let validFiles = allFiles.filter(file => ['css', 'html', 'js', 'png', 'gif', 'jpg', 'jpeg'].includes(file.split('.').pop()))
 
+  // In case we are in a Javascript folder, do not include the packages files
   validFiles = validFiles.filter(file => !file.includes('/node_modules'))
 
   // Create the config file to store the subdomain and the secret key
@@ -53,5 +54,5 @@ exec('find .', {maxBuffer: 1024*500}, (error, stdout, stderr) => {
     
     // Read the content for each valid files and store it in an array. Then post each file to the server
     utils.readFiles(validFiles, (err, files) => upload(subdomain, token, files))
-  }).catch(err => console.log('An error occured trying to upload the files to the server:', err))
+  }).catch(err => console.log('An error occured trying to upload the files to the server.'))
 })

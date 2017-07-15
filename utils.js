@@ -34,7 +34,7 @@ const upload = (subdomain, token, files) => {
   const requests = files.map(file => axios.request({
     url: '/' + file.filename,
     method: 'put',
-    baseURL: 'http://' + subdomain + '.statik.run',
+    baseURL: `http://${subdomain}.statik.run`,
     headers: {'authentication': token},
     data: {content: file.content}
   }))
