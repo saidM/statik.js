@@ -4,7 +4,11 @@
 
 Deploy your static websites to the cloud using a single command from the terminal.
 
-No accounts, no setup, no signup required; one command and your project is up online!
+No accounts, no setup, no signup required; one command and your project is up online.
+
+## Quick preview
+
+![Terminal](https://www.sayid.fr/terminal.png)
 
 ## Installation
 
@@ -20,15 +24,9 @@ npm install -g statik.js
 statik
 ```
 
-The utility generates a random subdomain for your project and moves all your html, javascript, css and images files from the current directory to the CDN.
+The utility generates a random subdomain for your project and moves all your static files (HTML, CSS, Javascript and images) from the current directory to the CDN.
 
 Your project will then be available at an address similar to this one: http://xxx.statik.run
-
-
-## Features to come
-
-- Custom domain name
-- HTTPS support
 
 ## Licence
 
